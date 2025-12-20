@@ -3,7 +3,7 @@ trigger:
     include:
       - main
       - feature/*
-pool: My_pool
+pool: Default 
 stages:
 - stage: TerraformBuildInit
   jobs:
@@ -27,10 +27,10 @@ stages:
         workingDirectory: '$(veshu)'
         backendServiceArm: 'Secret_Service'
         backendAzureRmOverrideSubscriptionID: '$(sub)'
-        backendAzureRmResourceGroupName: 'pintu12'
-        backendAzureRmStorageAccountName: 'tattu101'
-        backendAzureRmContainerName: 'con99'
-        backendAzureRmKey: 'orange.terraform_state'
+        backendAzureRmResourceGroupName: 'dinu007'
+        backendAzureRmStorageAccountName: 'demodinu007'
+        backendAzureRmContainerName: 'containerdinu007'
+        backendAzureRmKey: 'dinu.terraform_state'
     - task: TerraformTask@5
       displayName: Terraform Validate
       inputs:
@@ -56,8 +56,8 @@ stages:
     steps:
     - task: ManualValidation@1
       inputs:
-        notifyUsers: 'kapil@kapilsharmamgcgvvgmail.onmicrosoft.com'
-        approvers: 'kapil@kapilsharmamgcgvvgmail.onmicrosoft.com'
+        notifyUsers: 'dineshvit1107_outlook.com#EXT#@dineshvit1107outlook.onmicrosoft.com'
+        approvers: 'dineshvit1107_outlook.com#EXT#@dineshvit1107outlook.onmicrosoft.com'
         instructions: 'Please review code'
         onTimeout: 'resume'
 
@@ -82,10 +82,10 @@ stages:
         workingDirectory: '$(veshu)'
         backendServiceArm: 'Secret_Service'
         backendAzureRmOverrideSubscriptionID: '$(sub)'
-        backendAzureRmResourceGroupName: 'pintu12'
-        backendAzureRmStorageAccountName: 'tattu101'
-        backendAzureRmContainerName: 'con99'
-        backendAzureRmKey: 'orange.terraform_state'
+        backendAzureRmResourceGroupName: 'dinu007'
+        backendAzureRmStorageAccountName: 'demodinu007'
+        backendAzureRmContainerName: 'containerdinu007'
+        backendAzureRmKey: 'dinu.terraform_state'
     # - task: TerraformTask@5
     #   inputs:
     #     provider: 'azurerm'
