@@ -1,104 +1,39 @@
-trigger:
-  branches:
-    include:
-      - main
-      - feature/*
-pool: Default 
-stages:
-- stage: TerraformBuildInit
-  jobs:
-  - job: BuildJob
-    displayName: Terraform Init
-    # pool: My_pool
+trigger: none
 
-    variables: 
-      veshu:  '$(System.DefaultWorkingDirectory)/environment/dev'
-      sub:  '06f4c176-e41e-424a-bfc2-cb4b3a4e5fe5'
-    steps:
+pool:
+  name: Default
 
-    - task: TerraformInstaller@1
-      inputs:
-        terraformVersion: 'latest'
-    - task: TerraformTask@5
-      displayName: Terraform Init
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(veshu)'
-        backendServiceArm: 'Secret_Service'
-        backendAzureRmOverrideSubscriptionID: '$(sub)'
-        backendAzureRmResourceGroupName: 'dinu007'
-        backendAzureRmStorageAccountName: 'demodinu007'
-        backendAzureRmContainerName: 'containerdinu007'
-        backendAzureRmKey: 'dinu.terraform_state'
-    - task: TerraformTask@5
-      displayName: Terraform Validate
-      inputs:
-        provider: 'azurerm'
-        command: 'validate'
-        workingDirectory: '$(veshu)'
-    - task: TerraformTask@5
-      displayName: Terraform Plan
-      inputs:
-        provider: 'azurerm'
-        command: 'plan'
-        workingDirectory: '$(veshu)'
-        environmentServiceNameAzureRM: 'Secret_Service'
-        environmentAzureRmOverrideSubscriptionID: '$(sub)'
+steps:
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
 
-- stage: TerraformValidation
-  displayName: Manua Validate
-  dependsOn: TerraformBuildInit
-  jobs: 
-  - job: BuildManualValidate
-    pool: server
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+    backendServiceArm: 'conn-terraform'
+    backendAzureRmOverrideSubscriptionID: 'd50c38d2-13bf-4ffd-9f5a-6831160e665d'
+    backendAzureRmResourceGroupName: 'demo-dinu007'
+    backendAzureRmStorageAccountName: 'demodinu007'
+    backendAzureRmContainerName: 'containerdinu007'
+    backendAzureRmKey: 'dinu.terraform_state'
 
-    steps:
-    - task: ManualValidation@1
-      inputs:
-        notifyUsers: 'dineshvit1107_outlook.com#EXT#@dineshvit1107outlook.onmicrosoft.com'
-        approvers: 'dineshvit1107_outlook.com#EXT#@dineshvit1107outlook.onmicrosoft.com'
-        instructions: 'Please review code'
-        onTimeout: 'resume'
 
-- stage: TerraformApply
-  displayName:  Terraform Apply
-  dependsOn: TerraformValidation
-  jobs:
-  - job: BuildApply
-    # pool: My_pool
-    variables:
-      veshu: '$(System.DefaultWorkingDirectory)/environment/dev'
-      sub: '06f4c176-e41e-424a-bfc2-cb4b3a4e5fe5'
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+    environmentServiceNameAzureRM: 'conn-terraform'
+    environmentAzureRmOverrideSubscriptionID: 'd50c38d2-13bf-4ffd-9f5a-6831160e665d'
 
-    steps:
-    - task: TerraformInstaller@1
-      inputs:
-        terraformVersion: 'latest'
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(veshu)'
-        backendServiceArm: 'Secret_Service'
-        backendAzureRmOverrideSubscriptionID: '$(sub)'
-        backendAzureRmResourceGroupName: 'dinu007'
-        backendAzureRmStorageAccountName: 'demodinu007'
-        backendAzureRmContainerName: 'containerdinu007'
-        backendAzureRmKey: 'dinu.terraform_state'
-    # - task: TerraformTask@5
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'apply'
-    #     workingDirectory: '$(veshu)'
-    #     commandOptions: '-auto-approve'
-    #     environmentServiceNameAzureRM: 'Secret_Service'
-    #     environmentAzureRmOverrideSubscriptionID: '$(sub)'
 
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: '$(veshu)'
-        environmentServiceNameAzureRM: 'Secret_Service'
-        environmentAzureRmOverrideSubscriptionID: '$(sub)'
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+    environmentServiceNameAzureRM: 'conn-terraform'
+    environmentAzureRmOverrideSubscriptionID: 'd50c38d2-13bf-4ffd-9f5a-6831160e665d'
